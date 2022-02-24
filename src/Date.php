@@ -15,11 +15,9 @@ class Date
 
     public static function parse(Collection $lines): static
     {
-        $linesArray = $lines->values()->all();
-
         return new static(
-            type: $linesArray[0] ? trim($linesArray[0]->first) : null,
-            date: $linesArray[1] ? trim($linesArray[1]->second) : null,
+            type: $lines->values()->get(0) ? trim($lines->values()->get(0)->first) : null,
+            date: $lines->values()->get(1) ? trim($lines->values()->get(1)->second) : null,
         );
     }
 }

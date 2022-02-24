@@ -44,8 +44,9 @@ class Family
     public static function parseEvents(Collection $lineChunks): array
     {
         return $lineChunks
+            ->filter(fn (Collection $lines) => $lines->count() >= 2)
             ->filter(fn (Collection $lines) => $lines->first()->isMarriage())
-            ->map(fn ($chunks) => Date::parse($chunks))
+            ->map(fn (Collection $chunks) => Date::parse($chunks))
             ->values()
             ->all();
     }
