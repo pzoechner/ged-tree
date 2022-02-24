@@ -43,10 +43,9 @@ class Individual
     {
         $genderLine = $items
             ->filter(fn ($chunk) => count($chunk) && $chunk[0]->first === RecordType::SEX)
-            ->first()
-            ->all();
+            ->flatten()->first();
 
-        return count($genderLine) ? $genderLine[0]->second : null;
+        return $genderLine?->second;
     }
 
     private static function parseDates(Collection $items): array
