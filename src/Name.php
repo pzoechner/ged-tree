@@ -24,6 +24,13 @@ class Name
         $surname = $nameLines->filter(fn (Line $line) => $line->first === RecordType::SURN)->first();
         $married = $nameLines->filter(fn (Line $line) => $line->first === RecordType::MARR)->first();
 
+        if ((! $first || ! strlen($first->second)) && (! $surname || ! strlen($surname->second))) {
+            preg_match('/\/(.+)\//', $nameLines->first()->second, $matches);
+            $firstNames = str_replace($matches[0], '', $nameLines->first()->second);
+
+            return new static($firstNames, $matches[1], null);
+        }
+
         return new static($first?->second, $surname?->second, $married?->second);
     }
 }

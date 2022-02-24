@@ -23,7 +23,7 @@ class Individual
 
         return new static(
             id: self::parseId($items->first()[0]),
-            name: self::parseName($items),
+            name: Name::parse($items),
             gender: self::parseGender($items),
             dates: self::parseDates($items),
         );
@@ -34,19 +34,14 @@ class Individual
         return trim($line->first);
     }
 
-    private static function parseName(Collection $items): Name
-    {
-        return  Name::parse($items);
-    }
-
     private static function parseGender(Collection $items): ?string
     {
+        /** @var Line $genderLine */
         $genderLine = $items
             ->filter(fn ($chunk) => count($chunk) && $chunk[0]->first === RecordType::SEX)
-            ->first()
-            ->all();
+            ->flatten()->first();
 
-        return count($genderLine) ? $genderLine[0]->second : null;
+        return $genderLine?->second;
     }
 
     private static function parseDates(Collection $items): array
