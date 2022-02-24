@@ -25,7 +25,6 @@ class FamilyTest extends TestCase
     /** @test */
     public function it_parses_family_events()
     {
-        dd($this->gedcom->getFamilies()->get(0)->events);
         $this->assertCount(1, $this->gedcom->getFamilies()->get(0)->events);
         $this->assertCount(0, $this->gedcom->getFamilies()->get(1)->events);
     }
