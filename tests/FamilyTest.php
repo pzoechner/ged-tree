@@ -17,8 +17,16 @@ class FamilyTest extends TestCase
     }
 
     /** @test */
-    public function it_extracts_families()
+    public function it_parses_families()
     {
         $this->assertCount(2, $this->gedcom->getFamilies());
+    }
+
+    /** @test */
+    public function it_parses_family_events()
+    {
+        dd($this->gedcom->getFamilies()->get(0)->events);
+        $this->assertCount(1, $this->gedcom->getFamilies()->get(0)->events);
+        $this->assertCount(0, $this->gedcom->getFamilies()->get(1)->events);
     }
 }

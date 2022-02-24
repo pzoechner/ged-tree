@@ -17,6 +17,8 @@ class LineGroup
 
     public function isFamily(): bool
     {
-        return $this->lines[0]->second === RecordType::FAM;
+        return $this->lines[0]->second === RecordType::FAM ||
+            $this->lines[0]->second === RecordType::FAMS ||
+            $this->lines[0]->second === RecordType::FAMC;
     }
 }

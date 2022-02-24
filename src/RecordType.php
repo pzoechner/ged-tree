@@ -6,6 +6,8 @@ class RecordType
 {
     const INDI = 'INDI';
     const FAM = 'FAM';
+    const FAMS = 'FAMS';
+    const FAMC = 'FAMC';
     const NAME = 'NAME';
     const SEX = 'SEX';
     const DATE = 'DATE';

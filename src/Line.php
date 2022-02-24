@@ -30,4 +30,14 @@ class Line
     {
         return $this->first === RecordType::WIFE;
     }
+
+    public function isMarriage(): bool
+    {
+        return $this->first === RecordType::MARR;
+    }
+
+    public function isDate(): bool
+    {
+        return $this->first === RecordType::DATE;
+    }
 }
