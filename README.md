@@ -36,7 +36,7 @@ $families = $tree->getFamilies();
 ```
 
 ```php
-$familiy = $families->first();
-$familiy->id;               // '@F1@'
-$familiy->pointers;         // ['@I2@', '@I3@']
+$family = $families->first();
+$family->id;               // '@F1@'
+$family->pointers;         // ['@I2@', '@I3@']
 ```
