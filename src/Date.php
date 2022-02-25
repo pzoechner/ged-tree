@@ -15,9 +15,9 @@ class Date
 
     public static function parse(Collection $lines): static
     {
-        return new static(
-            type: $lines->values()->get(0) ? trim($lines->values()->get(0)->first) : null,
-            date: $lines->values()->get(1) ? trim($lines->values()->get(1)->second) : null,
-        );
+        $date = $lines->filter(fn (Line $line) => $line->first === RecordType::DATE)->first();
+        $type = $lines->first();
+
+        return new static($date?->second, $type?->first);
     }
 }
