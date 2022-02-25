@@ -40,21 +40,25 @@ class Name
             ->flatten();
     }
 
-    private static function parseNameFromTopLine(Collection $nameLines)
+    private static function parseNameFromTopLine(Collection $nameLines): static
     {
         $firstName = $nameLines->first()?->second;
 
-        preg_match('/\/(.+)\//', $nameLines->first()->second, $matches);
-        $lastNameMatch = (is_array($matches) && count($matches) >= 2) ? $matches[0] : null;
+        if ($firstName) {
+            preg_match('/\/(.+)\//', $firstName, $matches);
+            $isLastNameFound = is_array($matches) && count($matches) >= 2;
+            $lastNameMatch = $isLastNameFound ? $matches[0] : null;
 
-        if ($lastNameMatch) {
-            $firstName = str_replace($lastNameMatch, '', $nameLines->first()->second);
+            if ($lastNameMatch) {
+                $firstName = trim(str_replace($lastNameMatch, '', $nameLines->first()->second));
+                $lastName = trim($matches[1]);
+
+                return new static($firstName, $lastName, null);
+            }
+
+            return new static($firstName, null, null);
         }
 
-        return new static(
-            first: $firstName ? trim($firstName) : null,
-            last: count($matches) > 1 ? trim($matches[1]) : null,
-            married: null,
-        );
+        return new static($firstName, null, null);
     }
 }
