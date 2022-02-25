@@ -14,29 +14,47 @@ class Name
         //
     }
 
-    public static function parse(Collection $lines): static
+    public static function parse(Collection $individualLines): static
     {
-        $nameLines = $lines
-            ->filter(fn (Collection $lineGroup) => $lineGroup->first()->first === RecordType::NAME)
-            ->flatten();
+        $nameLines = self::getNameLines($individualLines);
 
         $first = $nameLines->filter(fn (Line $line) => $line->first === RecordType::GIVN)->first();
+
         $surname = $nameLines->filter(fn (Line $line) => $line->first === RecordType::SURN)->first();
+
         $married = $nameLines->filter(fn (Line $line) => $line->first === RecordType::MARR)->first();
 
-        if ((! $first || ! strlen($first->second)) && (! $surname || ! strlen($surname->second))) {
-            $firstName = $nameLines->first()->second;
+        $isDetailLinesNotHavingEnoughInformation = (! $first || ! strlen($first->second)) && (! $surname || ! strlen($surname->second));
 
-            preg_match('/\/(.+)\//', $nameLines->first()->second, $matches);
-            $lastNameMatch = $matches[0];
-
-            if ($lastNameMatch) {
-                $firstName = str_replace($lastNameMatch, '', $nameLines->first()->second);
-            }
-
-            return new static(trim($firstName), trim($matches[1]), null);
+        if ($isDetailLinesNotHavingEnoughInformation) {
+            return self::parseNameFromTopLine($nameLines);
         }
 
         return new static($first?->second, $surname?->second, $married?->second);
+    }
+
+    private static function getNameLines(Collection $individualLines): Collection
+    {
+        return $individualLines
+            ->filter(fn (Collection $lineGroup) => $lineGroup->first()->first === RecordType::NAME)
+            ->flatten();
+    }
+
+    private static function parseNameFromTopLine(Collection $nameLines)
+    {
+        $firstName = $nameLines->first()?->second;
+
+        preg_match('/\/(.+)\//', $nameLines->first()->second, $matches);
+        $lastNameMatch = (is_array($matches) && count($matches) >= 2) ? $matches[0] : null;
+
+        if ($lastNameMatch) {
+            $firstName = str_replace($lastNameMatch, '', $nameLines->first()->second);
+        }
+
+        return new static(
+            first: $firstName ? trim($firstName) : null,
+            last: count($matches) > 1 ? trim($matches[1]) : null,
+            married: null,
+        );
     }
 }
