@@ -25,15 +25,17 @@ class Tree
     /**
      * @throws FileNotFoundException
      */
-    public static function load(string $filePath): static
+    public static function load(string $filePath): ?static
     {
-        $file = file($filePath);
+        try {
+            $file = file($filePath);
 
-        if (! $file) {
+            return new static($file);
+        } catch (\Exception $exception) {
             throw new FileNotFoundException();
         }
 
-        return new static($file);
+        return null;
     }
 
     public function getIndividuals(): LazyCollection
